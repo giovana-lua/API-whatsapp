@@ -109,14 +109,68 @@ const getMensagensTrocadas = function (number) {
         return MESSAGE_ERROR
     }
 }
-console.log(getMensagensTrocadas("11987876567"))
+//console.log(getMensagensTrocadas("11987876567"))
 
 //Retornar uma conversa de um usuário e um contato 
-const getConversaUsuario = function () {}
+const getConversaUsuario = function (number, numberContact) {
+
+    let message = {status: true, statuscode: 200, programador: 'Giovana Barbosa Souza'}
+    const user = dados.contatos["whats-users"].find(function (item){
+        return item.number === number
+    })
+    if(!user){
+        return MESSAGE_ERROR
+    }
+
+    const contato = user.contacts.find(contato => contato.number === numberContact )
+    return {
+        message,
+        mensagens: [
+            {perfil: user.account,
+                nome: contato.name,
+                imagem: contato.image,
+                mensagens: contato.messages
+            }
+        ]
+    }
+}
+
+//console.log (JSON.stringify(getConversaUsuario("11987876567","26999999968"), null, 2))
 
 //Filtro com uma palavra chave 
-const getPalavraChave = function () {}
+const getPalavraChave = function (number, numberContact, keyword) {
+    let message = {status: true, statuscode: 200, programador: 'Giovana Barbosa Souza'}
+    const user = dados?.contatos?.["whats-users"].find(user => user.number === number)
 
+    if(!user)
+        return MESSAGE_ERROR
+    
+    const contato = user.contacts.find(contato => contato.number === numberContact)
+    if(!contato)
+        return MESSAGE_ERROR
+    
+
+    const menssageFilter = contato.messages.filter(mensagem => 
+        mensagem.content && mensagem.content.toLowerCase().includes(keyword.toLowerCase()))
+
+        return{
+            message,
+            
+                perfil: user.account,
+                contato_mensagens:
+                {
+                    nome: contato.name,
+                    imagem: contato.image,
+                    numero: contato.number,
+                    mensagens: menssageFilter
+
+                }
+            
+           
+        }
+}
+
+console.log (getPalavraChave("11987876567","26999999968", 'hello'))
 
 module.exports = {
      getAllDados,
